@@ -320,13 +320,15 @@ class FocusHandlerImpl extends React.Component {
       if (initialRender) {
         initialRender = false;
       } else {
-        this.node.focus();
+        if (!this.node.contains(document.activeElement)) {
+          this.node.focus();
+        }
       }
     }
   }
 
   requestFocus = node => {
-    if (!this.state.shouldFocus) {
+    if (!this.state.shouldFocus && !node.contains(document.activeElement)) {
       node.focus();
     }
   };
