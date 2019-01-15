@@ -21,6 +21,11 @@ import {
 } from "./lib/history";
 
 ////////////////////////////////////////////////////////////////////////////////
+// React polyfill
+let { unstable_deferredUpdates } = ReactDOM;
+if (unstable_deferredUpdates === undefined) {
+  unstable_deferredUpdates = fn => fn();
+}
 
 const createNamedContext = (name, defaultValue) => {
   const Ctx = createContext(defaultValue);
@@ -96,8 +101,7 @@ class LocationProvider extends React.Component {
     } = this;
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
-        // TODO: replace rAF with react deferred update API when it's ready https://github.com/facebook/react/issues/13306
-        requestAnimationFrame(() => {
+        unstable_deferredUpdates(() => {
           if (!this.unmounted) {
             this.setState(() => ({ context: this.getContext() }));
           }
