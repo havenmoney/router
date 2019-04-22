@@ -1,6 +1,6 @@
 {
   "name": "@havenmoney/router",
-  "version": "1.2.3",
+  "version": "1.2.6",
   "description": "Next generation Routing for React.",
   "main": "index.js",
   "module": "es/index.js",
