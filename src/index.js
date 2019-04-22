@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
 import { polyfill } from "react-lifecycles-compat";
-import ReactDOM from "react-dom";
 import {
   startsWith,
   pick,
@@ -22,11 +21,6 @@ import {
 } from "./lib/history";
 
 ////////////////////////////////////////////////////////////////////////////////
-// React polyfill
-let { unstable_deferredUpdates } = ReactDOM;
-if (unstable_deferredUpdates === undefined) {
-  unstable_deferredUpdates = fn => fn();
-}
 
 const createNamedContext = (name, defaultValue) => {
   const Ctx = createContext(defaultValue);
@@ -102,7 +96,7 @@ class LocationProvider extends React.Component {
     } = this;
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
-        unstable_deferredUpdates(() => {
+        requestAnimationFrame(() => {
           if (!this.unmounted) {
             this.setState(() => ({ context: this.getContext() }));
           }
